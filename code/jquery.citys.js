@@ -46,6 +46,7 @@
             city:0,                   //城市,可以为地区编码或者名称
             area:0,                   //地区,可以为地区编码或者名称
             required: true,           //是否必须选一个
+            level2: false,            //是否只显示二级(省市)级联
             nodata: 'hidden',         //当无数据时的表现形式:'hidden'隐藏,'disabled'禁用,为空不做任何处理
             onChange:function(){}     //地区切换时触发,回调函数传入地区数据
         };
@@ -178,20 +179,24 @@
                         },
                         area:function(){
                             $area.empty();
-                            if(!options.required){
-                                $area.append('<option value=""> - 请选择 - </option>');
-                            }
-                            if(options.nodata=='disabled'){
-                                $area.prop('disabled',$.isEmptyObject(area));
-                            }else if(options.nodata=='hidden'){
-                                $area.css('display',$.isEmptyObject(area)?'none':'');
-                            }
-                            for(var i in area){
-                                $area.append('<option value="'+(options.valueType=='code'?i:area[i])+'" data-code="'+i+'">'+area[i]+'</option>');
-                            }
-                            if(options.area){
-                                var value = options.valueType=='code'?options.area:area[options.area];
-                                $area.val(value);
+                            if (hasCity && options.level2) {
+                                $area.css('display', 'none');
+                            } else {
+                                if(!options.required){
+                                    $area.append('<option value=""> - 请选择 - </option>');
+                                }
+                                if(options.nodata=='disabled'){
+                                    $area.prop('disabled',$.isEmptyObject(area));
+                                }else if(options.nodata=='hidden'){
+                                    $area.css('display',$.isEmptyObject(area)?'none':'');
+                                }
+                                for(var i in area){
+                                    $area.append('<option value="'+(options.valueType=='code'?i:area[i])+'" data-code="'+i+'">'+area[i]+'</option>');
+                                }
+                                if(options.area){
+                                    var value = options.valueType=='code'?options.area:area[options.area];
+                                    $area.val(value);
+                                }
                             }
                         }
                     };
